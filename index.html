@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halal Delights - Cake Menu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .menu-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .logo {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .menu-content {
+            padding: 40px;
+        }
+
+        .category-section {
+            margin-bottom: 60px;
+        }
+
+        .category-title {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #3498db;
+        }
+
+        .cake-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .cake-item {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid #f8f9fa;
+        }
+
+        .cake-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .cake-images {
+            position: relative;
+            height: 250px;
+            background-color: #f8f9fa;
+            overflow: hidden;
+        }
+
+        .cake-image-main {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .cake-image-main:hover {
+            transform: scale(1.05);
+        }
+
+        .cake-details {
+            padding: 25px;
+        }
+
+        .cake-name {
+            font-size: 1.4em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .cake-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .badges {
+            margin-bottom: 15px;
+        }
+
+        .halal-badge {
+            background: #27ae60;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .specialty-badge {
+            background: #e74c3c;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .pricing-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .pricing-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        .size-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .size-option {
+            flex: 1;
+            min-width: 80px;
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .size-option:hover {
+            background: #3498db;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .size-label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .size-price {
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .size-option:hover .size-price {
+            color: white;
+        }
+
+        .serving-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #fff3cd;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            position: relative;
+            margin: auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 1200px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-image {
+            max-width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            z-index: 1001;
+        }
+
+        .modal-close:hover {
+            color: #f1c40f;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .cake-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo {
+                font-size: 2em;
+            }
+            
+            .category-title {
+                font-size: 1.5em;
+            }
+            
+            .menu-content {
+                padding: 20px;
+            }
+
+            .size-options {
+                flex-direction: column;
+            }
+
+            .modal-close {
+                right: 20px;
+                font-size: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-container">
+        <div class="header">
+            <div class="logo">🍰 Halal Delights</div>
+            <div class="subtitle">Exquisite Halal Cakes & Custom Designs</div>
+        </div>
+
+        <div class="menu-content">
+            <!-- Celebration Cakes Category -->
+            <div class="category-section">
+                <h2 class="category-title">🎉 Celebration Cakes</h2>
+                <div class="cake-grid">
+                    <!-- Butter Cream Birthday Cake -->
+                    <div class="cake-item">
+                        <div class="cake-images" onclick="openModal('https://alfurqaneducation.com/wp-content/uploads/2026/01/Butter_Cream_Birthday_Cake.jpg')">
+                            <img src="https://alfurqaneducation.com/wp-content/uploads/2026/01/Butter_Cream_Birthday_Cake.jpg" alt="Butter Cream Birthday Cake" class="cake-image-main">
+                        </div>
+                        <div class="cake-details">
+                            <div class="badges">
+                                <span class="halal-badge">✓ 100% Halal</span>
+                                <span class="specialty-badge">Birthday Special</span>
+                            </div>
+                            <div class="cake-name">Butter Cream Birthday Cake</div>
+                            <div class="cake-description">
+                                Elegant vanilla sponge with butter cream frosting. Choose from white, pink, purple, or blue colors. Perfect for any celebration!
+                            </div>
+                            <div class="pricing-section">
+                                <div class="pricing-title">Choose Your Size:</div>
+                                <div class="size-options">
+                                    <div class="size-option">
+                                        <span class="size-label">6"</span>
+                                        <span class="size-price">€45</span>
+                                    </div>
+                                    <div class="size-option">
+                                        <span class="size-label">8"</span>
+                                        <span class="size-price">€55</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="serving-info">
+                                <span>⏱️ 24hrs notice</span>
+                                <span>🍰 3 layers</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Celebration Cake -->
+                    <div class="cake-item">
+                        <div class="cake-images" onclick="openModal('https://alfurqaneducation.com/wp-content/uploads/2026/01/CelebrationCake.jpeg')">
+                            <img src="https://alfurqaneducation.com/wp-content/uploads/2026/01/CelebrationCake.jpeg" alt="Celebration Cake" class="cake-image-main">
+                        </div>
+                        <div class="cake-details">
+                            <div class="badges">
+                                <span class="halal-badge">✓ 100% Halal</span>
+                                <span class="specialty-badge">Special</span>
+                            </div>
+                            <div class="cake-name">Celebration Cake</div>
+                            <div class="cake-description">
+                                Beautiful celebration cake with elegant decorations. Perfect for any special occasion or milestone celebration.
+                            </div>
+                            <div class="pricing-section">
+                                <div class="pricing-title">Choose Your Size:</div>
+                                <div class="size-options">
+                                    <div class="size-option">
+                                        <span class="size-label">6"</span>
+                                        <span class="size-price">€45</span>
+                                    </div>
+                                    <div class="size-option">
+                                        <span class="size-label">8"</span>
+                                        <span class="size-price">€55</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="serving-info">
+                                <span>⏱️ 24hrs notice</span>
+                                <span>🍰 Celebration special</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chocolate Lovers Category -->
+            <div class="category-section">
+                <h2 class="category-title">🍫 Chocolate Heaven</h2>
+                <div class="cake-grid">
+                    <!-- Chocolate Celebration Cake -->
+                    <div class="cake-item">
+                        <div class="cake-images" onclick="openModal('https://alfurqaneducation.com/wp-content/uploads/2026/01/ChoclateCelebrationCake.png')">
+                            <img src="https://alfurqaneducation.com/wp-content/uploads/2026/01/ChoclateCelebrationCake.png" alt="Chocolate Celebration Cake" class="cake-image-main">
+                        </div>
+                        <div class="cake-details">
+                            <div class="badges">
+                                <span class="halal-badge">✓ 100% Halal</span>
+                                <span class="specialty-badge">Chocolate Lover</span>
+                            </div>
+                            <div class="cake-name">Chocolate Celebration Cake</div>
+                            <div class="cake-description">
+                                Rich chocolate celebration cake with elegant chocolate decorations. A chocolate lover's dream for special occasions.
+                            </div>
+                            <div class="pricing-section">
+                                <div class="pricing-title">Choose Your Size:</div>
+                                <div class="size-options">
+                                    <div class="size-option">
+                                        <span class="size-label">6"</span>
+                                        <span class="size-price">€45</span>
+                                    </div>
+                                    <div class="size-option">
+                                        <span class="size-label">8"</span>
+                                        <span class="size-price">€55</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="serving-info">
+                                <span>⏱️ 24hrs notice</span>
+                                <span>Serves 8-12</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Chocolate Fudge Cake -->
+                    <div class="cake-item">
+                        <div class="cake-images" onclick="openModal('https://alfurqaneducation.com/wp-content/uploads/2026/01/Chocolate_Fudge_Cake.jpg')">
+                            <img src="https://alfurqaneducation.com/wp-content/uploads/2026/01/Chocolate_Fudge_Cake.jpg" alt="Chocolate Fudge Cake" class="cake-image-main">
+                        </div>
+                        <div class="cake-details">
+                            <div class="badges">
+                                <span class="halal-badge">✓ 100% Halal</span>
+                                <span class="specialty-badge">Premium</span>
+                            </div>
+                            <div class="cake-name">Chocolate Fudge Cake</div>
+                            <div class="cake-description">
+                                Rich chocolate sponge completely enrobed in premium chocolate crumbs. An indulgent treat for serious chocolate lovers.
+                            </div>
+                            <div class="pricing-section">
+                                <div class="pricing-title">Choose Your Size:</div>
+                                <div class="size-options">
+                                    <div class="size-option">
+                                        <span class="size-label">6"</span>
+                                        <span class="size-price">€45</span>
+                                    </div>
+                                    <div class="size-option">
+                                        <span class="size-label">8"</span>
+                                        <span class="size-price">€55</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="serving-info">
+                                <span>⏱️ 24hrs notice</span>
+                                <span>Serves 8-12</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chocolate Ganache Cake (new image) -->
+                    <div class="cake-item">
+                        <div class="cake-images" onclick="openModal('https://alfurqaneducation.com/wp-content/uploads/2026/01/ChoclateGanacheCake.png')">
+                            <img src="https://alfurqaneducation.com/wp-content/uploads/2026/01/ChoclateGanacheCake.png" alt="Chocolate Ganache Cake" class="cake-image-main">
+                        </div>
+                        <div class="cake-details">
+                            <div class="badges">
+                                <span class="halal-badge">✓ 100% Halal</span>
+                            </div>
+                            <div class="cake-name">Chocolate Ganache Cake</div>
+                            <div class="cake-description">
+                                Decadent chocolate ganache cake with smooth chocolate coating. Pure indulgence for chocolate enthusiasts.
+                            </div>
+                            <div class="pricing-section">
+                                <div class="pricing-title">Choose Your Size:</div>
+                                <div class="size-options">
+                                    <div class="size-option">
+                                        <span class="size-label">6"</span>
+                                        <span class="size-price">€45</span>
+                                    </div>
+                                    <div class="size-option">
+                                        <span class="size-label">8"</span>
+                                        <span class="size-price">€55</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="serving-info">
+                                <span>⏱️ 24hrs notice</span>
+                                <span>Serves 8-12</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chocolate Glazed Cake (new image) -->
+                    <div class="cake-item">
+                        <div class="cake-images" onclick="openModal('https://alfurqaneducation.com/wp-content/uploads/2026/01/ChoclateGlazedCake.png')">
+                            <img src="https://alfurqaneducation.com/wp-content/uploads/2026/01/ChoclateGlazedCake.png" alt="Chocolate Glazed Cake" class="cake-image-main">
+                        </div>
+                        <div class="cake-details">
+                            <div class="badges">
+                                <span class="halal-badge">✓ 100% Halal</span>
+                            </div>
+                            <div class="cake-name">Chocolate Glazed Cake</div>
+                            <div class="cake-description">
+                                Luxurious chocolate cake with glossy chocolate glaze. Elegant and sophisticated for special celebrations.
+                            </div>
+                            <div class="pricing-section">
+                                <div class="pricing-title">Choose Your Size:</div>
+                                <div class="size-options">
+                                    <div class="size-option">
+                                        <span class="size-label">6"</span>
+                                        <span class="size-price">€45</span>
+                                    </div>
+                                    <div class="size-option">
+                                        <span class="size-label">8"</span>
+                                        <span class="size-price">€55</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="serving-info">
+                                <span>⏱️ 24hrs notice</span>
+                                <span>Serves 8-12</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loaded Chocolate Cake -->
+                    <div class="cake-item">
+                        <div class="cake-images" onclick="openModal('https://alfurqaneducation.com/wp-content/uploads/2026/01/Loaded_Choclate_Cake.jpg')">
+                            <img src="https://alfurqaneducation.com/wp-content/uploads/2026/01/Loaded_Choclate_Cake.jpg" alt="Loaded Chocolate Cake" class="cake-image-main">
+                        </div>
+                        <div class="cake-details">
+                            <div class="badges">
+                                <span class="halal-badge">✓ 100% Halal</span>
+                                <span class="specialty-badge">Premium</span>
+                            </div>
+                            <div class="cake-name">Loaded Chocolate Cake</div>
+                            <div class="cake-description">
+                                Decadent chocolate cake topped with gold chocolate coins, premium chocolate bars, and pearl decorations.
+                            </div>
+                            <div class="pricing-section">
+                                <div class="pricing-title">Choose Your Size:</div>
+                                <div class="size-options">
+                                    <div class="size-option">
+                                        <span class="size-label">6"</span>
+                                        <span class="size-price">€45</span>
+                                    </div>
+                                    <div class="size-option">
+                                        <span class="size-label">8"</span>
+                                        <span class="size-price">€55</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="serving-info">
+                                <span>⏱️ 48hrs notice</span>
+                                <span>Serves 8-10</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kids Special Category -->
+            <div class="category-section">
+                <h2 class="category-title">🎈 Kids Special Cakes</h2>
+                <div class="cake-grid">
+                    <!-- Fondant Theme Cake -->
+                    <div class="cake-item">
+                        <div class="cake-images" onclick="openModal('https://alfurqaneducation.com/wp-content/uploads/2026/01/Fondant_Theme_Cake.jpg')">
+                            <img src="https://alfurqaneducation.com/wp-content/uploads/2026/01/Fondant_Theme_Cake.jpg" alt="Fondant Theme Cake" class="cake-image-main">
+                        </div>
+                        <div class="cake-details">
+                            <div class="badges">
+                                <span class="halal-badge">✓ 100% Halal</span>
+                                <span class="specialty-badge">Kids Special</span>
+                            </div>
+                            <div class="cake-name">Fondant Theme Cake</div>
+                            <div class="cake-description">
+                                Vanilla sponge with custom fondant theme. Featured: jungle theme with lion topper and safari animals.
+                            </div>
+                            <div class="pricing-section">
+                                <div class="pricing-title">Choose Your Size:</div>
+                                <div class="size-options">
+                                    <div class="size-option">
+                                        <span class="size-label">6"</span>
+                                        <span class="size-price">€100</span>
+                                    </div>
+                                    <div class="size-option">
+                                        <span class="size-label">8"</span>
+                                        <span class="size-price">€100</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="serving-info">
+                                <span>⏱️ 72hrs notice</span>
+                                <span>Serves 12-16</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fondant Bow Cake -->
+                    <div class="cake-item">
+                        <div class="cake-images" onclick="openModal('https://alfurqaneducation.com/wp-content/uploads/2026/01/Fondant_Bow_Cake.jpg')">
+                            <img src="https://alfurqaneducation.com/wp-content/uploads/2026/01/Fondant_Bow_Cake.jpg" alt="Fondant Bow Cake" class="cake-image-main">
+                        </div>
+                        <div class="cake-details">
+                            <div class="badges">
+                                <span class="halal-badge">✓ 100% Halal</span>
+                                <span class="specialty-badge">Elegant</span>
+                            </div>
+                            <div class="cake-name">Fondant Bow Cake</div>
+                            <div class="cake-description">
+                                Elegant fondant cake with beautiful bow decoration. Perfect for baby showers, birthdays, and special celebrations.
+                            </div>
+                            <div class="pricing-section">
+                                <div class="pricing-title">Choose Your Size:</div>
+                                <div class="size-options">
+                                    <div class="size-option">
+                                        <span class="size-label">6"</span>
+                                        <span class="size-price">€100</span>
+                                    </div>
+                                    <div class="size-option">
+                                        <span class="size-label">8"</span>
+                                        <span class="size-price">€100</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="serving-info">
+                                <span>⏱️ 48hrs notice</span>
+                                <span>Serves 10-14</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fondant Theme Cake (new image) -->
+                    <div class="cake-item">
+                        <div class="cake-images" onclick="openModal('https://alfurqaneducation.com/wp-content/uploads/2026/01/FondentThemeCake.jpeg')">
+                            <img src="https://alfurqaneducation.com/wp-content/uploads/2026/01/FondentThemeCake.jpeg" alt="Fondant Theme Cake Design" class="cake-image-main">
+                        </div>
+                        <div class="cake-details">
+                            <div class="badges">
+                                <span class="halal-badge">✓ 100% Halal</span>
+                                <span class="specialty-badge">Custom Design</span>
+                            </div>
+                            <div class="cake-name">Custom Fondant Theme Cake</div>
+                            <div class="cake-description">
+                                Beautifully designed fondant theme cake with custom decorations. Perfect for themed parties and special celebrations.
+                            </div>
+                            <div class="pricing-section">
+                                <div class="pricing-title">Choose Your Size:</div>
+                                <div class="size-options">
+                                    <div class="size-option">
+                                        <span class="size-label">6"</span>
+                                        <span class="size-price">€100</span>
+                                    </div>
+                                    <div class="size-option">
+                                        <span class="size-label">8"</span>
+                                        <span class="size-price">€100</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="serving-info">
+                                <span>⏱️ 72hrs notice</span>
+                                <span>Serves 10-16</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Marine Theme Cake -->
+                    <div class="cake-item">
+                        <div class="cake-images" onclick="openModal('https://alfurqaneducation.com/wp-content/uploads/2026/01/Marine_Theme_Birthday_Cake.jpg')">
+                            <img src="https://alfurqaneducation.com/wp-content/uploads/2026/01/Marine_Theme_Birthday_Cake.jpg" alt="Marine Theme Cake" class="cake-image-main">
+                        </div>
+                        <div class="cake-details">
+                            <div class="badges">
+                                <span class="halal-badge">✓ 100% Halal</span>
+                                <span class="specialty-badge">Kids Special</span>
+                            </div>
+                            <div class="cake-name">Marine Theme Birthday Cake</div>
+                            <div class="cake-description">
+                                Vanilla sponge with blue ocean-themed decoration featuring sea creatures, starfish, and marine life.
+                            </div>
+                            <div class="pricing-section">
+                                <div class="pricing-title">Choose Your Size:</div>
+                                <div class="size-options">
+                                    <div class="size-option">
+                                        <span class="size-label">6"</span>
+                                        <span class="size-price">€45</span>
+                                    </div>
+                                    <div class="size-option">
+                                        <span class="size-label">8"</span>
+                                        <span class="size-price">€55</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="serving-info">
+                                <span>⏱️ 48hrs notice</span>
+                                <span>Serves 12-14</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Birthday Special Category -->
+            <div class="category-section">
+                <h2 class="category-title">🎂 Birthday Specials</h2>
+                <div class="cake-grid">
+                    <!-- Fresh Cream Birthday Cake -->
+                    <div class="cake-item">
+                        <div class="cake-images" onclick="openModal('https://alfurqaneducation.com/wp-content/uploads/2026/01/Fresh_Cream_Birthday_Cake.jpg')">
+                            <img src="https://alfurqaneducation.com/wp-content/uploads/2026/01/Fresh_Cream_Birthday_Cake.jpg" alt="Fresh Cream Birthday Cake" class="cake-image-main">
+                        </div>
+                        <div class="cake-details">
+                            <div class="badges">
+                                <span class="halal-badge">✓ 100% Halal</span>
+                                <span class="specialty-badge">Birthday Special</span>
+                            </div>
+                            <div class="cake-name">Fresh Cream Birthday Cake</div>
+                            <div class="cake-description">
+                                Strawberry vanilla sponge with pink buttercream, purple chocolate spheres, rosette piping, and custom name.
+                            </div>
+                            <div class="pricing-section">
+                                <div class="pricing-title">Choose Your Size:</div>
+                                <div class="size-options">
+                                    <div class="size-option">
+                                        <span class="size-label">6"</span>
+                                        <span class="size-price">€45</span>
+                                    </div>
+                                    <div class="size-option">
+                                        <span class="size-label">8"</span>
+                                        <span class="size-price">€55</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="serving-info">
+                                <span>⏱️ 24hrs notice</span>
+                                <span>Serves 8-10</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Premium Chocolate Birthday -->
+                    <div class="cake-item">
+                        <div class="cake-images" onclick="openModal('https://alfurqaneducation.com/wp-content/uploads/2026/01/Premium_Choclate_Cake.jpg')">
+                            <img src="https://alfurqaneducation.com/wp-content/uploads/2026/01/Premium_Choclate_Cake.jpg" alt="Premium Chocolate Birthday Cake" class="cake-image-main">
+                        </div>
+                        <div class="cake-details">
+                            <div class="badges">
+                                <span class="halal-badge">✓ 100% Halal</span>
+                                <span class="specialty-badge">Birthday Special</span>
+                            </div>
+                            <div class="cake-name">Premium Chocolate Birthday Cake</div>
+                            <div class="cake-description">
+                                Rich chocolate cake with chocolate shards, gold chocolate coins, and "Happy Birthday" topper.
+                            </div>
+                            <div class="pricing-section">
+                                <div class="pricing-title">Choose Your Size:</div>
+                                <div class="size-options">
+                                    <div class="size-option">
+                                        <span class="size-label">6"</span>
+                                        <span class="size-price">€45</span>
+                                    </div>
+                                    <div class="size-option">
+                                        <span class="size-label">8"</span>
+                                        <span class="size-price">€55</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="serving-info">
+                                <span>⏱️ 48hrs notice</span>
+                                <span>Serves 10-12</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Premium Collection Category -->
+            <div class="category-section">
+                <h2 class="category-title">⭐ Premium Collection</h2>
+                <div class="cake-grid">
+                    <!-- Vanilla Cream with Chocolate Drip -->
+                    <div class="cake-item">
+                        <div class="cake-images" onclick="openModal('https://alfurqaneducation.com/wp-content/uploads/2026/01/soft_vanilla_cream_cake_with_choclate_drip.jpg')">
+                            <img src="https://alfurqaneducation.com/wp-content/uploads/2026/01/soft_vanilla_cream_cake_with_choclate_drip.jpg" alt="Vanilla Cream Drip Cake" class="cake-image-main">
+                        </div>
+                        <div class="cake-details">
+                            <div class="badges">
+                                <span class="halal-badge">✓ 100% Halal</span>
+                            </div>
+                            <div class="cake-name">Vanilla Cream with Chocolate Drip</div>
+                            <div class="cake-description">
+                                Mint-flavored sponge with chocolate drip, mint and vanilla buttercream rosettes, purple and gold spheres.
+                            </div>
+                            <div class="pricing-section">
+                                <div class="pricing-title">Choose Your Size:</div>
+                                <div class="size-options">
+                                    <div class="size-option">
+                                        <span class="size-label">6"</span>
+                                        <span class="size-price">€45</span>
+                                    </div>
+                                    <div class="size-option">
+                                        <span class="size-label">8"</span>
+                                        <span class="size-price">€55</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="serving-info">
+                                <span>⏱️ 24hrs notice</span>
+                                <span>Serves 8-12</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Special Celebration Cake -->
+                    <div class="cake-item">
+                        <div class="cake-images" onclick="openModal('https://alfurqaneducation.com/wp-content/uploads/2026/01/Special_Celebration_Cake.jpg')">
+                            <img src="https://alfurqaneducation.com/wp-content/uploads/2026/01/Special_Celebration_Cake.jpg" alt="Special Celebration Cake" class="cake-image-main">
+                        </div>
+                        <div class="cake-details">
+                            <div class="badges">
+                                <span class="halal-badge">✓ 100% Halal</span>
+                                <span class="specialty-badge">Premium</span>
+                            </div>
+                            <div class="cake-name">Special Celebration Cake</div>
+                            <div class="cake-description">
+                                Sophisticated coral-colored cake with handcrafted orange fondant roses and gold pearl decorations.
+                            </div>
+                            <div class="pricing-section">
+                                <div class="pricing-title">Choose Your Size:</div>
+                                <div class="size-options">
+                                    <div class="size-option">
+                                        <span class="size-label">6"</span>
+                                        <span class="size-price">€45</span>
+                                    </div>
+                                    <div class="size-option">
+                                        <span class="size-label">8"</span>
+                                        <span class="size-price">€55</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="serving-info">
+                                <span>⏱️ 48hrs notice</span>
+                                <span>Serves 8-10</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Eid Special Cake -->
+                    <div class="cake-item">
+                        <div class="cake-images" onclick="openModal('https://alfurqaneducation.com/wp-content/uploads/2026/01/Theme_Cake.jpg')">
+                            <img src="https://alfurqaneducation.com/wp-content/uploads/2026/01/Theme_Cake.jpg" alt="Eid Special Cake" class="cake-image-main">
+                        </div>
+                        <div class="cake-details">
+                            <div class="badges">
+                                <span class="halal-badge">✓ 100% Halal</span>
+                                <span class="specialty-badge">Eid Special</span>
+                            </div>
+                            <div class="cake-name">Eid Mubarak Theme Cake</div>
+                            <div class="cake-description">
+                                Special Eid cake with orange frosting, "Eid Mubarak" inscription, and adorable lamb decoration.
+                            </div>
+                            <div class="pricing-section">
+                                <div class="pricing-title">Choose Your Size:</div>
+                                <div class="size-options">
+                                    <div class="size-option">
+                                        <span class="size-label">6"</span>
+                                        <span class="size-price">€45</span>
+                                    </div>
+                                    <div class="size-option">
+                                        <span class="size-label">8"</span>
+                                        <span class="size-price">€55</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="serving-info">
+                                <span>⏱️ 48hrs notice</span>
+                                <span>Serves 10-12</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🌙 All our cakes are made with 100% halal ingredients and certified by local halal authorities</p>
+            <p style="margin-top: 10px;">Custom designs, personalized messages, and special dietary requirements available upon request</p>
+            <p style="margin-top: 10px; font-weight: bold;">📞 Contact: 0894610462 </p>
+            <p style="margin-top: 15px; font-size: 0.9em;">*Images shown are examples. Actual cake designs may vary. All prices in Euro (€).</p>
+        </div>
+    </div>
+
+    <!-- Modal for Image Popup -->
+    <div id="imageModal" class="modal">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <div class="modal-content">
+            <img id="modalImage" class="modal-image" src="" alt="">
+        </div>
+    </div>
+
+    <script>
+        function openModal(imageSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            
+            modalImage.src = imageSrc;
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside the image
+        window.onclick = function(event) {
+            const modal = document.getElementById('imageModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            const modal = document.getElementById('imageModal');
+            if (modal.style.display === 'block') {
+                if (event.key === 'Escape') {
+                    closeModal();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
